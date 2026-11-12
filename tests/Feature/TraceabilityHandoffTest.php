@@ -27,6 +27,9 @@ class TraceabilityHandoffTest extends TestCase
             });
         }
         (require database_path('migrations/2026_11_01_000001_add_traceability_handoffs.php'))->up();
+        Schema::table('bien_dong_kho', function (Blueprint $table) {
+            $table->decimal('nhiet_do_luc_xuat', 6, 2)->nullable();
+        });
         if (!Schema::hasTable('phieu_kiem_dinh')) {
             Schema::create('phieu_kiem_dinh', function (Blueprint $table) {
                 $table->bigIncrements('phieu_id');
@@ -63,7 +66,7 @@ class TraceabilityHandoffTest extends TestCase
 
     private function dispatch(): int
     {
-        return $this->service->dispatch(1, ['chuyen_id' => 1, 'to_chuc_nhan_id' => 3, 'dia_chi_giao' => 'Store A'], $this->user);
+        return $this->service->dispatch(1, ['chuyen_id' => 1, 'to_chuc_nhan_id' => 3, 'dia_chi_giao' => 'Store A', 'nhiet_do_luc_xuat' => 2.5], $this->user);
     }
 
     private function startTrip(): void
@@ -88,7 +91,7 @@ class TraceabilityHandoffTest extends TestCase
         $this->assertSame(3, (int)\App\Models\PhieuGiaoHang::with('toChucNhan')->findOrFail($id)->toChucNhan->to_chuc_id);
         $this->assertDatabaseHas('phieu_giao_hang', ['phieu_giao_hang_id' => $id, 'to_chuc_giao_id' => 2, 'to_chuc_nhan_id' => 3, 'chuyen_id' => 1]);
         $this->assertDatabaseHas('so_luong_giao_nhan', ['so_luong_giao' => 10, 'lo_nong_san_id' => 2]);
-        $this->assertDatabaseHas('bien_dong_kho', ['loai' => 'XUAT', 'phieu_giao_hang_id' => $id]);
+        $this->assertDatabaseHas('bien_dong_kho', ['loai' => 'XUAT', 'phieu_giao_hang_id' => $id, 'nhiet_do_luc_xuat' => 2.5]);
         $this->expectException(ValidationException::class);
         $this->dispatch();
     }
@@ -141,7 +144,7 @@ class TraceabilityHandoffTest extends TestCase
         $q = DB::table('so_luong_giao_nhan')->value('id');
         DB::table('don_vi_dong_goi_sscc')->insert(['sscc_id' => 2, 'ma_sscc' => '189385002781441652', 'kho_lanh_id' => 1, 'trang_thai' => 'TRONG_KHO']);
         DB::table('chi_tiet_dong_goi_sscc')->insert(['sscc_id' => 2, 'lo_nong_san_id' => 2, 'so_luong' => 5, 'don_vi_tinh' => 'kg']);
-        $id2 = $this->service->dispatch(2, ['chuyen_id' => 1, 'to_chuc_nhan_id' => 3, 'dia_chi_giao' => 'Store B'], $this->user);
+        $id2 = $this->service->dispatch(2, ['chuyen_id' => 1, 'to_chuc_nhan_id' => 3, 'dia_chi_giao' => 'Store B', 'nhiet_do_luc_xuat' => 2.5], $this->user);
         $this->startTrip();
         $this->service->confirm($id, ['ten_nguoi_nhan_thuc_te' => 'Receiver', 'tinh_trang_bao_goi' => 'NGUYEN_VEN', 'quantities' => [$q => ['received' => 0, 'reason' => 'Refused']]], $this->user, null);
         $this->assertDatabaseHas('phieu_giao_hang', ['phieu_giao_hang_id' => $id, 'trang_thai' => 'TRA_VE']);

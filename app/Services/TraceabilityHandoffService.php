@@ -91,7 +91,7 @@ class TraceabilityHandoffService
                         'chi_tiet_giao_nhan_id' => $line->chi_tiet_giao_nhan_id, 'lo_nong_san_id' => $content->lo_nong_san_id,
                         'so_luong_giao' => $content->so_luong, 'don_vi_tinh' => $content->don_vi_tinh,
                     ]);
-                    $this->movement($content->lo_nong_san_id, $id, $unit->kho_lanh_id, $user->tai_khoan_id, 'XUAT', $content->so_luong, $content->don_vi_tinh, $delivery->phieu_giao_hang_id);
+                    $this->movement($content->lo_nong_san_id, $id, $unit->kho_lanh_id, $user->tai_khoan_id, 'XUAT', $content->so_luong, $content->don_vi_tinh, $delivery->phieu_giao_hang_id, ['nhiet_do_luc_xuat' => $data['nhiet_do_luc_xuat']]);
                 }
                 $unit->update(['trang_thai' => 'DANG_VAN_CHUYEN']);
             }
@@ -174,7 +174,7 @@ class TraceabilityHandoffService
             'tai_khoan_id' => $user, 'loai' => $type, 'so_luong' => $quantity,
             'don_vi_tinh' => $unit, 'phieu_giao_hang_id' => $delivery, 'thoi_gian' => now(),
         ];
-        foreach (['nhiet_do_luc_nhan', 'tinh_trang_bao_goi', 'vi_tri_luu_kho', 'ghi_chu'] as $field) {
+        foreach (['nhiet_do_luc_nhan', 'nhiet_do_luc_xuat', 'tinh_trang_bao_goi', 'vi_tri_luu_kho', 'ghi_chu'] as $field) {
             if (array_key_exists($field, $metadata) && $metadata[$field] !== null && $metadata[$field] !== '') {
                 $row[$field] = $metadata[$field];
             }

@@ -71,6 +71,7 @@
             </div>
 
             <button type="button" class="f2f-mobile-filter-trigger" data-mobile-filter-open aria-label="Mở bộ lọc nhập xuất kho" aria-controls="operation-filters" aria-expanded="false">@include('layouts.partials.mobile-icon', ['icon' => 'search'])</button>
+            <button type="button" class="f2f-btn-secondary text-xs" data-open-qr-scanner data-warehouse-sscc-scan>Quét SSCC</button>
 
             {{-- Filter Form --}}
             <div class="f2f-mobile-filter-panel" id="operation-filters" data-mobile-filter>
@@ -520,6 +521,8 @@
                 </select>
                 <label class="f2f-label">Địa chỉ giao hàng *</label>
                 <input name="dia_chi_giao" class="f2f-input" maxlength="255" required>
+                <label class="f2f-label" for="dispatch_nhiet_do_luc_xuat">Nhiệt độ sản phẩm lúc xuất (°C) *</label>
+                <input class="f2f-input" type="number" step="0.1" min="-50" max="80" name="nhiet_do_luc_xuat" id="dispatch_nhiet_do_luc_xuat" required placeholder="Ví dụ: 2.5">
                 <label class="f2f-label" for="dispatch_ghi_chu">Ghi chú xuất kho</label>
                 <input class="f2f-input" type="text" name="ghi_chu" id="dispatch_ghi_chu" placeholder="Vd: Bàn giao nguyên vẹn, nhiệt độ xe đạt 2.0°C...">
             </div>

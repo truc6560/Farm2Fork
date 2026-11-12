@@ -332,6 +332,7 @@ class OperationController extends Controller
             'chuyen_id' => ['required', 'integer', 'exists:chuyen_van_chuyen,chuyen_id'],
             'to_chuc_nhan_id' => ['required', 'exists:to_chuc,to_chuc_id'],
             'dia_chi_giao' => ['required', 'string', 'max:255'],
+            'nhiet_do_luc_xuat' => ['required', 'numeric', 'min:-50', 'max:80'],
             'ghi_chu' => ['nullable', 'string', 'max:500'],
         ]);
         $id = app(\App\Services\TraceabilityHandoffService::class)->dispatch($validated['id'], $validated, $request->user());
@@ -348,6 +349,7 @@ class OperationController extends Controller
             'chuyen_id' => ['required', 'integer', 'exists:chuyen_van_chuyen,chuyen_id'],
             'to_chuc_nhan_id' => ['required', 'exists:to_chuc,to_chuc_id'],
             'dia_chi_giao' => ['required', 'string', 'max:255'],
+            'nhiet_do_luc_xuat' => ['required', 'numeric', 'min:-50', 'max:80'],
             'ghi_chu' => ['nullable', 'string', 'max:500'],
             'q' => ['nullable', 'string', 'max:100'],
             'filter_kho_lanh_id' => ['nullable', 'integer', 'exists:kho_lanh,kho_lanh_id'],

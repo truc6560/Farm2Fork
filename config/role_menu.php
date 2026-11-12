@@ -4,6 +4,7 @@ return [
     'ADMIN' => [
         ['label' => 'Thành viên', 'route' => 'admin.members.index', 'active' => 'admin.members.*'],
         ['label' => 'Quản lý tài khoản', 'route' => 'admin.accounts.index', 'active' => 'admin.accounts.*'],
+        ['label' => 'Tra cứu vùng trồng', 'route' => 'admin.planting-zones.index', 'active' => 'admin.planting-zones.*'],
         ['label' => 'Quản lý kho lạnh', 'route' => 'admin.warehouses.index', 'active' => 'admin.warehouses.*'],
         ['label' => 'Ngưỡng cảnh báo', 'route' => 'admin.thresholds.index', 'active' => 'admin.thresholds.*'],
     ],

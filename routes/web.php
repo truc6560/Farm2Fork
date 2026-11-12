@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\AccountProvisionController;
 use App\Http\Controllers\Admin\MemberController;
+use App\Http\Controllers\Admin\PlantingZoneLookupController;
 use App\Http\Controllers\Admin\RegistrationApprovalController;
 use App\Http\Controllers\Admin\ThresholdController;
 use App\Http\Controllers\Admin\WarehouseController;
@@ -99,6 +100,14 @@ Route::middleware(['auth', 'active.account'])->group(function () {
                 Route::post('/invitations/{id}/resend', [MemberController::class, 'resend'])->name('invitations.resend');
                 Route::post('/invitations/{id}/revoke', [MemberController::class, 'revoke'])->name('invitations.revoke');
                 Route::post('/invitations/{id}/link', [MemberController::class, 'getLink'])->name('invitations.link');
+            });
+
+        Route::prefix('admin/planting-zones')
+            ->name('admin.planting-zones.')
+            ->middleware('admin.role')
+            ->group(function () {
+                Route::get('/', [PlantingZoneLookupController::class, 'index'])->name('index');
+                Route::get('/{id}', [PlantingZoneLookupController::class, 'show'])->whereNumber('id')->name('show');
             });
 
         Route::prefix('admin/accounts')

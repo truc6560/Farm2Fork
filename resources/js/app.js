@@ -112,6 +112,7 @@ let qrStream = null;
 let qrTimer = null;
 let qrDetector = null;
 let qrPreviousFocus = null;
+let qrWarehouseMode = false;
 
 function qrMessage(message) {
     if (qrStatus) qrStatus.textContent = message;
@@ -130,6 +131,19 @@ function stopQrCamera() {
 }
 
 function openTraceFromQr(rawValue) {
+    if (qrWarehouseMode) {
+        const match = String(rawValue).trim().match(/(?:^|\/)00\/(\d{18})(?:\/|$)/) || String(rawValue).trim().match(/^(\d{18})$/);
+        if (!match) {
+            qrMessage('Không đọc được mã SSCC 18 chữ số. Hãy quét lại hoặc nhập mã bằng ô tìm kiếm.');
+            return false;
+        }
+        stopQrCamera();
+        const target = new URL(window.location.href);
+        target.searchParams.set('q', match[1]);
+        target.searchParams.set('tab', target.searchParams.get('tab') === 'outbound' ? 'outbound' : 'inbound');
+        window.location.assign(target.href);
+        return true;
+    }
     let parsed;
     try {
         parsed = new URL(rawValue, window.location.origin);
@@ -157,13 +171,21 @@ function closeQrScanner() {
     qrPreviousFocus?.focus();
 }
 
-document.querySelector('[data-open-qr-scanner]')?.addEventListener('click', (event) => {
+document.querySelectorAll('[data-open-qr-scanner]').forEach((button) => button.addEventListener('click', (event) => {
+    qrWarehouseMode = event.currentTarget.hasAttribute('data-warehouse-sscc-scan');
     qrPreviousFocus = event.currentTarget;
     if (qrOverlay) qrOverlay.hidden = false;
     document.body.style.overflow = 'hidden';
     qrMessage('Chọn cách quét mã.');
+    const manual = document.getElementById('mobile-qr-link');
+    if (manual) {
+        manual.type = qrWarehouseMode ? 'text' : 'url';
+        manual.placeholder = qrWarehouseMode ? 'Nhập SSCC 18 chữ số hoặc dán đường dẫn /00/...' : 'https://.../01/.../10/...';
+        const label = document.querySelector('label[for="mobile-qr-link"]');
+        if (label) label.textContent = qrWarehouseMode ? 'Hoặc nhập mã SSCC' : 'Hoặc dán đường dẫn truy xuất';
+    }
     qrOverlay?.querySelector('[data-close-qr-scanner]')?.focus();
-});
+}));
 qrOverlay?.querySelector('[data-close-qr-scanner]')?.addEventListener('click', closeQrScanner);
 qrOverlay?.addEventListener('click', (event) => {
     if (event.target === qrOverlay) closeQrScanner();
@@ -179,7 +201,7 @@ document.getElementById('mobile-qr-camera')?.addEventListener('click', async () 
     }
     try {
         stopQrCamera();
-        qrDetector = new window.BarcodeDetector({ formats: ['qr_code'] });
+        qrDetector = new window.BarcodeDetector({ formats: qrWarehouseMode ? ['qr_code', 'code_128'] : ['qr_code'] });
         qrStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
         qrVideo.srcObject = qrStream;
         qrVideo.hidden = false;
@@ -209,7 +231,7 @@ qrFile?.addEventListener('change', async () => {
     }
     try {
         const bitmap = await createImageBitmap(file);
-        const detector = new window.BarcodeDetector({ formats: ['qr_code'] });
+        const detector = new window.BarcodeDetector({ formats: qrWarehouseMode ? ['qr_code', 'code_128'] : ['qr_code'] });
         const codes = await detector.detect(bitmap);
         bitmap.close();
         if (codes[0]) openTraceFromQr(codes[0].rawValue);
