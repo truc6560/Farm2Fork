@@ -32,6 +32,15 @@ class QualityGateService
 
     private function latestConclusion(LoNongSan $lot, array $types): ?string
     {
+        if ($lot->relationLoaded('phieuKiemDinh')) {
+            $ticket = $lot->phieuKiemDinh
+                ->filter(fn($p) => in_array(data_get($p, 'loai_kiem_dinh'), $types, true))
+                ->sortByDesc(fn($p) => data_get($p, 'ngay_kiem_dinh'))
+                ->first();
+
+            return $ticket ? data_get($ticket, 'ket_luan') : null;
+        }
+
         return $lot->phieuKiemDinh()
             ->whereIn('loai_kiem_dinh', $types)
             ->orderByDesc('ngay_kiem_dinh')
