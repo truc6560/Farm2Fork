@@ -125,8 +125,10 @@ CREATE TABLE `canh_bao_sscc` (
   `ghi_chu` text COLLATE utf8mb4_unicode_ci,
   PRIMARY KEY (`id`),
   UNIQUE KEY `canh_bao_sscc_canh_bao_id_sscc_id_unique` (`canh_bao_id`,`sscc_id`),
-  KEY `canh_bao_sscc_sscc_id_foreign` (`sscc_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  KEY `canh_bao_sscc_sscc_id_foreign` (`sscc_id`),
+  CONSTRAINT `canh_bao_sscc_canh_bao_id_foreign` FOREIGN KEY (`canh_bao_id`) REFERENCES `canh_bao_chuoi_lanh` (`canh_bao_id`) ON DELETE CASCADE,
+  CONSTRAINT `canh_bao_sscc_sscc_id_foreign` FOREIGN KEY (`sscc_id`) REFERENCES `don_vi_dong_goi_sscc` (`sscc_id`) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -795,8 +797,10 @@ CREATE TABLE `nhan_vien_vung_trong` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`tai_khoan_id`,`vung_trong_id`),
-  KEY `nhan_vien_vung_trong_vung_trong_id_foreign` (`vung_trong_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  KEY `nhan_vien_vung_trong_vung_trong_id_foreign` (`vung_trong_id`),
+  CONSTRAINT `nhan_vien_vung_trong_tai_khoan_id_foreign` FOREIGN KEY (`tai_khoan_id`) REFERENCES `tai_khoan_he_thong` (`tai_khoan_id`) ON DELETE CASCADE,
+  CONSTRAINT `nhan_vien_vung_trong_vung_trong_id_foreign` FOREIGN KEY (`vung_trong_id`) REFERENCES `vung_trong` (`vung_trong_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -805,7 +809,7 @@ CREATE TABLE `nhan_vien_vung_trong` (
 
 LOCK TABLES `nhan_vien_vung_trong` WRITE;
 /*!40000 ALTER TABLE `nhan_vien_vung_trong` DISABLE KEYS */;
-INSERT INTO `nhan_vien_vung_trong` VALUES (2,1,'2025-09-10','Backfill từ người phụ trách ban đầu','2026-11-04 11:26:07','2026-11-04 11:26:07'),(4,2,'2025-09-10','Backfill từ người phụ trách ban đầu','2026-11-04 11:26:07','2026-11-04 11:26:07'),(2,11,'2026-10-26','Backfill từ người phụ trách ban đầu','2026-11-04 11:26:07','2026-11-04 11:26:07'),(2,29,'2026-10-28','Backfill từ người phụ trách ban đầu','2026-11-04 11:26:07','2026-11-04 11:26:07'),(101,66,'2026-11-06','Tự tạo vùng trồng mới','2026-11-06 02:57:18','2026-11-06 02:57:18'),(100,65,'2026-11-06','Tự tạo vùng trồng mới','2026-11-06 02:57:16','2026-11-06 02:57:16'),(127,91,'2026-11-07','Tự tạo vùng trồng mới','2026-11-07 02:11:26','2026-11-07 02:11:26'),(128,92,'2026-11-07','Tự tạo vùng trồng mới','2026-11-07 02:11:26','2026-11-07 02:11:26'),(179,140,'2026-11-07','Tự tạo vùng trồng mới','2026-11-07 15:52:17','2026-11-07 15:52:17'),(178,139,'2026-11-07','Tự tạo vùng trồng mới','2026-11-07 15:52:16','2026-11-07 15:52:16'),(195,154,'2026-11-08','Tự tạo vùng trồng mới','2026-11-07 20:47:54','2026-11-07 20:47:54'),(196,155,'2026-11-08','Tự tạo vùng trồng mới','2026-11-07 20:47:54','2026-11-07 20:47:54'),(23,169,'2026-11-08','Tự tạo vùng trồng mới','2026-11-07 23:24:23','2026-11-07 23:24:23'),(23,170,'2026-11-08','Kiểm thử','2026-11-07 23:24:23','2026-11-07 23:24:23'),(23,171,'2026-11-08','Kiểm thử','2026-11-07 23:24:24','2026-11-07 23:24:24'),(23,172,'2026-11-08','Kiểm thử','2026-11-07 23:24:24','2026-11-07 23:24:24'),(212,173,'2026-11-08','Tự tạo vùng trồng mới','2026-11-07 23:25:01','2026-11-07 23:25:01'),(213,174,'2026-11-08','Tự tạo vùng trồng mới','2026-11-07 23:25:01','2026-11-07 23:25:01'),(23,189,'2026-11-08','Kiểm thử','2026-11-07 23:25:04','2026-11-07 23:25:04'),(23,187,'2026-11-08','Tự tạo vùng trồng mới','2026-11-07 23:25:04','2026-11-07 23:25:04'),(23,188,'2026-11-08','Kiểm thử','2026-11-07 23:25:04','2026-11-07 23:25:04'),(23,190,'2026-11-08','Kiểm thử','2026-11-07 23:25:04','2026-11-07 23:25:04');
+INSERT INTO `nhan_vien_vung_trong` VALUES (2,1,'2025-09-10','Backfill từ người phụ trách ban đầu','2026-11-04 11:26:07','2026-11-04 11:26:07'),(4,2,'2025-09-10','Backfill từ người phụ trách ban đầu','2026-11-04 11:26:07','2026-11-04 11:26:07'),(2,11,'2026-10-26','Backfill từ người phụ trách ban đầu','2026-11-04 11:26:07','2026-11-04 11:26:07'),(2,29,'2026-10-28','Backfill từ người phụ trách ban đầu','2026-11-04 11:26:07','2026-11-04 11:26:07');
 /*!40000 ALTER TABLE `nhan_vien_vung_trong` ENABLE KEYS */;
 UNLOCK TABLES;
 
