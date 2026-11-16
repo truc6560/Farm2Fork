@@ -36,6 +36,11 @@ class TaiKhoanHeThong extends Authenticatable
         return $this->mat_khau_hash;
     }
 
+    public function getAuthPasswordName(): string
+    {
+        return 'mat_khau_hash';
+    }
+
     public function vaiTro()
     {
         return $this->belongsTo(VaiTro::class, 'vai_tro_id', 'vai_tro_id');
